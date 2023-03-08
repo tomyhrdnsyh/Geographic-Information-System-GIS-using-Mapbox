@@ -3,3 +3,6 @@ GIS berbasis website case destinasi wisata daerah klaten, dibangun diatas django
 
 1. Dashboard
 ![image](https://user-images.githubusercontent.com/58851621/223804801-1d9a44f6-46ec-468a-8506-99c8f3c96c50.png)
+<br>
+2. Admin
+![image](https://user-images.githubusercontent.com/58851621/223805157-b5e0a751-6bf9-4703-87da-20ba7807e069.png)
