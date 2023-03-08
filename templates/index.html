@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>GIS Klaten - Home</title>
+
+    <link rel="apple-touch-icon" href="{% static 'img/app-icon.jpg' %}">
+    <link rel="shortcut icon" type="image/x-icon" href=" {% static 'img/app-icon.jpg' %}">
+
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+{#  <div class="container">#}
+    <div class="menu-bar">
+      <img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;">
+      <ul>
+        <div class="input-group">
+          <input placeholder="Search Location" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+
+        <li><a href="/">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li class="fa fa-user-circle-o" style="font-size:30px; color:#65737e; margin-left: 1.5rem;"></li>
+      </ul>
+    </div>
+    <div id='map'></div>
+{#  </div>#}
+<script>
+	// TO MAKE THE MAP APPEAR YOU MUST
+	// ADD YOUR ACCESS TOKEN FROM
+	// https://account.mapbox.com
+	mapboxgl.accessToken = '{{ mapbox_access_token }}';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+        style: 'mapbox://styles/mapbox/light-v11', // style URL
+        center: [110.96072044262617, -7.342371509127405], // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
+        zoom: 8 // starting zoom default 10
+    });
+
+    {% for item in wisata %}
+    var marker = new mapboxgl.Marker()
+        .setLngLat([{{ item.longitude }}, {{ item.latitude }}])
+        .setPopup(new mapboxgl.Popup().setHTML(
+            "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>"+
+            "<p>{{ item.lokasi }}</p>"
+        ))
+        .addTo(map);
+    {% endfor %}
+</script>
+</body>
+</html>
