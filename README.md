@@ -1,4 +1,4 @@
-# Geographic-Information-System-GIS-using-Mapbox
+# Geographic-Information-System-using-Mapbox
 GIS berbasis website case destinasi wisata daerah klaten, dibangun diatas django web-framework
 
 1. Dashboard
