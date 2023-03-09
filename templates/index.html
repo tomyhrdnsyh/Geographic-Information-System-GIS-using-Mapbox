@@ -21,7 +21,7 @@
 <body>
 {#  <div class="container">#}
     <div class="menu-bar">
-      <img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;">
+        <a href="/"><img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;"></a>
       <ul>
         <div class="input-group">
           <input placeholder="Search Location" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
@@ -30,12 +30,21 @@
           </div>
         </div>
 
-        <li><a href="/">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-        <li class="fa fa-user-circle-o" style="font-size:30px; color:#65737e; margin-left: 1.5rem;"></li>
+        <li><a href="/" class="menu-bar-item">Home</a></li>
+        <li><a href="#" class="menu-bar-item">About</a></li>
+        <li><a href="#" class="menu-bar-item">Contact</a></li>
       </ul>
+      <div class='menu-item'>
+        <li class="fa fa-user-circle-o" style="font-size:30px; color:#65737e; margin-left: 1.5rem;"></li>
+        <div class='dropdown'>
+          <a href='#'>Cut</a>
+          <a href='#'>Copy</a>
+          <a href='#'>Paste</a>
+        </div>
+      </div>
     </div>
+
+
     <div id='map'></div>
 {#  </div>#}
 <script>
