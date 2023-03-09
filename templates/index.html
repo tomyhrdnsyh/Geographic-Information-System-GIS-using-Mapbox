@@ -19,30 +19,35 @@
 
 </head>
 <body>
-{#  <div class="container">#}
+    <!-- Menu Bar -->
     <div class="menu-bar">
         <a href="/"><img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;"></a>
-      <ul>
-        <div class="input-group">
+      <ul class="menu-bar-ul">
+
+        <div class="input-group me-lg-5">
           <input placeholder="Search Location" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
           </div>
         </div>
 
-        <li><a href="/" class="menu-bar-item">Home</a></li>
-        <li><a href="#" class="menu-bar-item">About</a></li>
-        <li><a href="#" class="menu-bar-item">Contact</a></li>
+        <li class="menu-bar-ul-li"><a href="/">Home</a></li>
+        <li class="menu-bar-ul-li"><a href="#">About</a></li>
+        <li class="menu-bar-ul-li"><a href="#">Contact</a></li>
+
+        <li class="dropdown ms-lg-4">
+              <button class="btn btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-cogs" style="font-size:25px; color:#65737e;"></i>
+              </button>
+              <ul class="dropdown-menu p-0 top-50" aria-labelledby="dropdownMenuButton1">
+                <span class="dropdown-header text-center">Administrator</span>
+                <div class="dropdown-divider m-0"></div>
+                <li><a class="dropdown-item p-2" href="/admin/"><i class="fa fa-cog pe-2"></i> Admin Page</a></li>
+              </ul>
+        </li>
       </ul>
-      <div class='menu-item'>
-        <li class="fa fa-user-circle-o" style="font-size:30px; color:#65737e; margin-left: 1.5rem;"></li>
-        <div class='dropdown'>
-          <a href='#'>Cut</a>
-          <a href='#'>Copy</a>
-          <a href='#'>Paste</a>
-        </div>
-      </div>
     </div>
+    <!-- End Menu Bar -->
 
 
     <div id='map'></div>
@@ -70,5 +75,7 @@
         .addTo(map);
     {% endfor %}
 </script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
