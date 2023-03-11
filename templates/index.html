@@ -42,7 +42,8 @@
               <ul class="dropdown-menu p-0 top-50" aria-labelledby="dropdownMenuButton1">
                 <span class="dropdown-header text-center">Administrator</span>
                 <div class="dropdown-divider m-0"></div>
-                <li><a class="dropdown-item p-2" href="/admin/"><i class="fa fa-cog pe-2"></i> Admin Page</a></li>
+                <li><a class="dropdown-item p-2" href="/admin/"><i class="fa fa-user-circle pe-2 ps-1"></i> Admin Page</a></li>
+
               </ul>
         </li>
       </ul>
@@ -51,7 +52,7 @@
 
 
     <div id='map'></div>
-{#  </div>#}
+
 <script>
 	// TO MAKE THE MAP APPEAR YOU MUST
 	// ADD YOUR ACCESS TOKEN FROM
@@ -62,7 +63,7 @@
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
         style: 'mapbox://styles/mapbox/light-v11', // style URL
         center: [110.96072044262617, -7.342371509127405], // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
-        zoom: 8 // starting zoom default 10
+        zoom: 7 // starting zoom default 10
     });
 
     {% for item in wisata %}
@@ -70,10 +71,98 @@
         .setLngLat([{{ item.longitude }}, {{ item.latitude }}])
         .setPopup(new mapboxgl.Popup().setHTML(
             "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>"+
-            "<p>{{ item.lokasi }}</p>"
+            "<p>{{ item.lokasi }}</p>"+
+            '<button class="btn btn-info btn-sm" onclick="get_location_user({{ item.latitude }}, {{ item.longitude }})">Jarak</button>'
         ))
         .addTo(map);
     {% endfor %}
+
+
+
+    // GET LOCATION USER
+    function get_location_user(lat_target, long_target) {
+        // when get location user is success
+
+        const successCallback = (position) => {
+
+          user_latitude = position.coords.latitude;
+          user_longitude = position.coords.longitude;
+
+          let url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${user_latitude}&lon=${user_longitude}`;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.address) {
+                    formatted_address = `${data.address.city}, ${data.address.country}`;
+                    geojson = {
+                        'type': 'Feature',
+                        'properties': {
+                            'message': formatted_address,
+                            'iconSize': [60, 60]
+                        },
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [user_longitude, user_latitude]
+                        }
+                    };
+
+                    // Create a DOM element for each marker.
+                    const el = document.createElement('div');
+                    const width = geojson.properties.iconSize[0];
+                    const height = geojson.properties.iconSize[1];
+                    el.className = 'marker';
+                    el.style.backgroundImage = `url({% static "img/user.png" %})`;
+                    el.style.width = `${width}px`;
+                    el.style.height = `${height}px`;
+                    el.style.backgroundSize = '100%';
+
+                    // Add markers to the map.
+                    new mapboxgl.Marker(el)
+                    .setLngLat(geojson.geometry.coordinates)
+                    .setPopup(new mapboxgl.Popup().setHTML("<p class='h7 fw-bolder'>Your Location</p>"+geojson.properties.message))
+                    .addTo(map);
+
+                    lineFeature = {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                          [user_longitude, user_latitude],
+                          [long_target, lat_target],
+                        ]
+                      }
+                    };
+                }
+            })
+            .catch(error => alert(`Error: ${error}`));
+        };
+
+        const errorCallback = (error) => {
+          alert(error);
+        };
+
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+        map.addSource('line-source', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [lineFeature]
+          }
+        });
+
+        map.addLayer({
+          id: 'line-layer',
+          type: 'line',
+          source: 'line-source',
+          paint: {
+            'line-color': '#888',
+            'line-width': 2
+          }
+        });
+    }
+
 </script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
