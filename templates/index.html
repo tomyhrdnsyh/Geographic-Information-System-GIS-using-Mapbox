@@ -133,6 +133,29 @@
                         ]
                       }
                     };
+
+                    map.addSource('line-source', {
+                      type: 'geojson',
+                      data: {
+                        type: 'FeatureCollection',
+                        features: [lineFeature]
+                      }
+                    });
+
+                    map.addLayer({
+                      id: 'route',
+                      type: 'line',
+                      source: 'line-source',
+                      layout: {
+                          'line-cap': 'round',
+                          'line-join': 'round',
+                      },
+                      paint: {
+                        'line-color': '#888',
+                        'line-width': 2,
+                        'line-dasharray': [0, 3],
+                      }
+                    });
                 }
             })
             .catch(error => alert(`Error: ${error}`));
@@ -144,23 +167,7 @@
 
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
-        map.addSource('line-source', {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [lineFeature]
-          }
-        });
 
-        map.addLayer({
-          id: 'line-layer',
-          type: 'line',
-          source: 'line-source',
-          paint: {
-            'line-color': '#888',
-            'line-width': 2
-          }
-        });
     }
 
 </script>
