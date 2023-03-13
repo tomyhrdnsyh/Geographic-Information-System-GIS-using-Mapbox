@@ -10,7 +10,9 @@
 
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
+    <link href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.6.0/mapbox-gl-geocoder.css' rel='stylesheet' />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/@turf/turf"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -19,16 +21,16 @@
 
 </head>
 <body>
-    <!-- Menu Bar -->
-    <div class="menu-bar">
-        <a href="/"><img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;"></a>
-      <ul class="menu-bar-ul">
+<!-- Menu Bar -->
+<div class="menu-bar">
+    <a href="/"><img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;"></a>
+    <ul class="menu-bar-ul">
 
         <div class="input-group me-lg-5">
-          <input placeholder="Search Location" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
-          </div>
+            <input placeholder="Search Location" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
+            </div>
         </div>
 
         <li class="menu-bar-ul-li"><a href="/">Home</a></li>
@@ -36,28 +38,28 @@
         <li class="menu-bar-ul-li"><a href="#">Contact</a></li>
 
         <li class="dropdown ms-lg-4">
-              <button class="btn btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-cogs" style="font-size:25px; color:#65737e;"></i>
-              </button>
-              <ul class="dropdown-menu p-0 top-50" aria-labelledby="dropdownMenuButton1">
+            <button class="btn btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-cogs" style="font-size:25px; color:#65737e;"></i>
+            </button>
+            <ul class="dropdown-menu p-0 top-50" aria-labelledby="dropdownMenuButton1">
                 <span class="dropdown-header text-center">Administrator</span>
                 <div class="dropdown-divider m-0"></div>
                 <li><a class="dropdown-item p-2" href="/admin/"><i class="fa fa-user-circle pe-2 ps-1"></i> Admin Page</a></li>
 
-              </ul>
+            </ul>
         </li>
-      </ul>
-    </div>
-    <!-- End Menu Bar -->
+    </ul>
+</div>
+<!-- End Menu Bar -->
 
 
-    <div id='map'></div>
+<div id='map'></div>
 
 <script>
-	// TO MAKE THE MAP APPEAR YOU MUST
-	// ADD YOUR ACCESS TOKEN FROM
-	// https://account.mapbox.com
-	mapboxgl.accessToken = '{{ mapbox_access_token }}';
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = '{{ mapbox_access_token }}';
     const map = new mapboxgl.Map({
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
@@ -67,14 +69,39 @@
     });
 
     {% for item in wisata %}
-    var marker = new mapboxgl.Marker()
-        .setLngLat([{{ item.longitude }}, {{ item.latitude }}])
-        .setPopup(new mapboxgl.Popup().setHTML(
-            "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>"+
-            "<p>{{ item.lokasi }}</p>"+
-            '<button class="btn btn-info btn-sm" onclick="get_location_user({{ item.latitude }}, {{ item.longitude }})">Jarak</button>'
-        ))
-        .addTo(map);
+
+        var slider_image = `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                              <div class="carousel-inner">
+                                <div class="carousel-item active" style="height: 150px;">
+                                  <img class="d-block w-100" src="https://media.istockphoto.com/id/1295274245/photo/random-multicolored-spheres-computer-generated-abstract-form-of-large-and-small-balls-3d.jpg?s=612x612&w=0&k=20&c=q7NOl28YxIIOqKu6em50VlKrg6ISFyVww_nLOCr5W_A=" alt="First slide">
+                                </div>
+                                <div class="carousel-item" style="height: 150px;">
+                                  <img class="d-block w-100 h-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWOvnPlF0NYcjKgHtDH5GLpqH_6y-q01TemA&usqp=CAU" alt="Second slide">
+                                </div>
+                                <div class="carousel-item" style="height: 150px;">
+                                  <img class="d-block w-100 h-100" src="https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&w=1000&q=80" alt="Third slide">
+                                </div>
+                              </div>
+                              <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                              <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </div>`
+
+        var marker = new mapboxgl.Marker()
+            .setLngLat([{{ item.longitude }}, {{ item.latitude }}])
+            .setPopup(new mapboxgl.Popup().setHTML(
+                "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>"+
+                "<p>{{ item.lokasi }}</p>"+
+                `${slider_image}`+
+                '<button class="btn btn-info btn-sm mt-2" onclick="get_location_user({{ item.latitude }}, {{ item.longitude }})">Jarak</button>'
+            ))
+            .addTo(map);
+
     {% endfor %}
 
 
@@ -85,84 +112,113 @@
 
         const successCallback = (position) => {
 
-          user_latitude = position.coords.latitude;
-          user_longitude = position.coords.longitude;
+            user_latitude = position.coords.latitude;
+            user_longitude = position.coords.longitude;
 
-          let url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${user_latitude}&lon=${user_longitude}`;
+            var from = [user_latitude, user_longitude]
+            var to = [lat_target, long_target]
+
+            // Calculate the distance between the two coordinates using the turf.js library:
+            var distance = turf.distance(turf.point(from), turf.point(to));
+
+            // get address user
+            let url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${user_latitude}&lon=${user_longitude}`;
 
             fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.address) {
-                    formatted_address = `${data.address.city}, ${data.address.country}`;
-                    geojson = {
-                        'type': 'Feature',
-                        'properties': {
-                            'message': formatted_address,
-                            'iconSize': [60, 60]
-                        },
-                        'geometry': {
-                            'type': 'Point',
-                            'coordinates': [user_longitude, user_latitude]
+                .then(response => response.json())
+                .then(data => {
+                    if (data.address) {
+                        formatted_address = `${data.address.city}, ${data.address.country} <p> Jarak : <strong> ${distance.toFixed(2)} KM</strong></p> `;
+                        geojson = {
+                            'type': 'Feature',
+                            'properties': {
+                                'message': formatted_address,
+                                'iconSize': [60, 60]
+                            },
+                            'geometry': {
+                                'type': 'Point',
+                                'coordinates': [user_longitude, user_latitude]
+                            }
+                        };
+
+                        // Create a DOM element for each marker.
+                        const el = document.createElement('div');
+                        const width = geojson.properties.iconSize[0];
+                        const height = geojson.properties.iconSize[1];
+                        el.className = 'marker';
+                        el.style.backgroundImage = `url({% static "img/user.png" %})`;
+                        el.style.width = `${width}px`;
+                        el.style.height = `${height}px`;
+                        el.style.backgroundSize = '100%';
+
+                        // Add markers to the map.
+                        new mapboxgl.Marker(el)
+                            .setLngLat(geojson.geometry.coordinates)
+                            .setPopup(new mapboxgl.Popup().setHTML("<p class='h7 fw-bolder'>Your Location</p>"+geojson.properties.message))
+                            .addTo(map)
+                            .togglePopup();
+
+                        lineFeature = {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [user_longitude, user_latitude],
+                                    [long_target, lat_target],
+                                ]
+                            }
+                        };
+
+                        // Remove the existing source
+                        if (map.getSource('user-ID')) {
+                            // Remove the line layer
+                            map.removeLayer('route');
+                            // Remove the source marker
+                            map.removeSource('user-ID');
                         }
-                    };
 
-                    // Create a DOM element for each marker.
-                    const el = document.createElement('div');
-                    const width = geojson.properties.iconSize[0];
-                    const height = geojson.properties.iconSize[1];
-                    el.className = 'marker';
-                    el.style.backgroundImage = `url({% static "img/user.png" %})`;
-                    el.style.width = `${width}px`;
-                    el.style.height = `${height}px`;
-                    el.style.backgroundSize = '100%';
+                        map.addSource('user-ID', {
+                            type: 'geojson',
+                            data: {
+                                type: 'FeatureCollection',
+                                features: [lineFeature]
+                            }
+                        });
+                        map.addLayer({
+                            id: 'route',
+                            type: 'line',
+                            source: 'user-ID',
+                            layout: {
+                                'line-cap': 'round',
+                                'line-join': 'round',
+                            },
+                            paint: {
+                                'line-color': '#888',
+                                'line-width': 2,
+                                'line-dasharray': [0, 3],
+                            }
+                        });
+                        // Add a symbol layer to display text on the line
+                        {% comment %}map.addLayer({
+                            'id': 'my-text-layer',
+                            'type': 'symbol',
+                            'source': 'user-ID',
+                            'layout': {
+                                'symbol-placement': 'line',
+                                'text-field': 'Text', // Replace with the name of your text field attribute
+                                'text-size': 16,
+                                {#'text-color': '#000000',#}
+                                'text-offset': [0, -2]
+                            }
+                        });{% endcomment %}
 
-                    // Add markers to the map.
-                    new mapboxgl.Marker(el)
-                    .setLngLat(geojson.geometry.coordinates)
-                    .setPopup(new mapboxgl.Popup().setHTML("<p class='h7 fw-bolder'>Your Location</p>"+geojson.properties.message))
-                    .addTo(map);
-
-                    lineFeature = {
-                      "type": "Feature",
-                      "geometry": {
-                        "type": "LineString",
-                        "coordinates": [
-                          [user_longitude, user_latitude],
-                          [long_target, lat_target],
-                        ]
-                      }
-                    };
-
-                    map.addSource('line-source', {
-                      type: 'geojson',
-                      data: {
-                        type: 'FeatureCollection',
-                        features: [lineFeature]
-                      }
-                    });
-
-                    map.addLayer({
-                      id: 'route',
-                      type: 'line',
-                      source: 'line-source',
-                      layout: {
-                          'line-cap': 'round',
-                          'line-join': 'round',
-                      },
-                      paint: {
-                        'line-color': '#888',
-                        'line-width': 2,
-                        'line-dasharray': [0, 3],
-                      }
-                    });
-                }
-            })
-            .catch(error => alert(`Error: ${error}`));
+                    }
+                })
+                .catch(error => alert(`Error: ${error}`));
         };
 
         const errorCallback = (error) => {
-          alert(error);
+            alert(error);
         };
 
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
