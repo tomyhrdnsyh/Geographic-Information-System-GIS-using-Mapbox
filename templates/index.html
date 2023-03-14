@@ -15,9 +15,10 @@
     <script src="https://unpkg.com/@turf/turf"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -26,16 +27,15 @@
     <a href="/"><img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;"></a>
     <ul class="menu-bar-ul">
 
-        <div class="input-group me-lg-5">
-            <input placeholder="Search Location" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
+        <form method="get" action="/" class="input-group me-lg-5">
+            <input placeholder="Search Location" name="search_address" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
+                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
             </div>
-        </div>
+        </form>
 
         <li class="menu-bar-ul-li"><a href="/">Home</a></li>
-        <li class="menu-bar-ul-li"><a href="#">About</a></li>
-        <li class="menu-bar-ul-li"><a href="#">Contact</a></li>
+        <li class="menu-bar-ul-li text-center"><a href="{% url 'about' %}" style="width: 180px;">About & Contact</a></li>
 
         <li class="dropdown ms-lg-4">
             <button class="btn btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -64,8 +64,8 @@
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
         style: 'mapbox://styles/mapbox/light-v11', // style URL
-        center: [110.96072044262617, -7.342371509127405], // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
-        zoom: 7 // starting zoom default 10
+        center: {{ center }}, // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
+        zoom: {{ zoom }} // starting zoom default 10
     });
 
     {% for item in wisata %}
@@ -73,7 +73,7 @@
         var slider_image = `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                               <div class="carousel-inner">
                                 {% for image in item.galeri__gambar %}
-                                <div class="carousel-item active" style="height: 150px;">
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 150px;">
                                   <img class="d-block w-100" src="{{ image }}" alt="First slide">
                                 </div>
                                 {% endfor %}

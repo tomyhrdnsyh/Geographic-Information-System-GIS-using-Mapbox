@@ -16,7 +16,3 @@ class WisataAdmin(admin.ModelAdmin):
     inlines = [GaleriWisataInline]
     list_display = ("id_tempat", "nama_tempat", "latitude", "longitude", "lokasi",
                     "keterangan")
-
-# @admin.register(Galeri)
-# class GaleriAdmin(admin.ModelAdmin):
-#     list_display = ("id_galeri", "wisata", "nama_galeri", "gambar", "keterangan",)
