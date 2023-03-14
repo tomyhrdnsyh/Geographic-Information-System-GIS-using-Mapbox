@@ -72,15 +72,11 @@
 
         var slider_image = `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                               <div class="carousel-inner">
+                                {% for image in item.galeri__gambar %}
                                 <div class="carousel-item active" style="height: 150px;">
-                                  <img class="d-block w-100" src="https://media.istockphoto.com/id/1295274245/photo/random-multicolored-spheres-computer-generated-abstract-form-of-large-and-small-balls-3d.jpg?s=612x612&w=0&k=20&c=q7NOl28YxIIOqKu6em50VlKrg6ISFyVww_nLOCr5W_A=" alt="First slide">
+                                  <img class="d-block w-100" src="{{ image }}" alt="First slide">
                                 </div>
-                                <div class="carousel-item" style="height: 150px;">
-                                  <img class="d-block w-100 h-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWOvnPlF0NYcjKgHtDH5GLpqH_6y-q01TemA&usqp=CAU" alt="Second slide">
-                                </div>
-                                <div class="carousel-item" style="height: 150px;">
-                                  <img class="d-block w-100 h-100" src="https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&w=1000&q=80" alt="Third slide">
-                                </div>
+                                {% endfor %}
                               </div>
                               <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>

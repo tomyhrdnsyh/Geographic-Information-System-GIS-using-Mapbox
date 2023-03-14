@@ -20,9 +20,22 @@ class WisataView(CreateView):
         context['mapbox_access_token'] = 'pk.eyJ1Ijoicm9uaWFydGFzaXRpbmphayIsImEiOiJja2pzZGdkZTkxNnpjMnRwNXY4MmJwdTJuIn0.yy8btAs8q76jGtbiZY628w '
 
         wisata = Wisata.objects.values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
-        wisata_dd = defaultdict(list)
+
+        output = []
+        places = {}
+
         for item in wisata:
-            wisata_dd[item['nama_tempat']].append(item['galeri__gambar'])
-        print(wisata_dd)
-        context['wisata'] = wisata
+            name = item["nama_tempat"]
+            if name in places:
+                places[name]["galeri__gambar"].append(item["galeri__gambar"])
+            else:
+                places[name] = item
+                places[name]["galeri__gambar"] = [item["galeri__gambar"]]
+
+        for place in places.values():
+            if place["galeri__gambar"][0] is None and len(place["galeri__gambar"]) == 1:
+                place["galeri__gambar"] = ['static/ing/logo 2.png']
+            output.append(place)
+
+        context['wisata'] = output
         return context
