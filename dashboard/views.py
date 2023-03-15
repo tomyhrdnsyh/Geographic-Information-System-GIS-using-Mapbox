@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from .models import *
 from django.db.models import Q
+from django.contrib.auth.models import User, Group
 
 
 # Create your views here.
@@ -64,3 +65,38 @@ class WisataView(CreateView):
 def about(request):
     context = {}
     return render(request, 'about.html', context)
+
+
+def register(request):
+    context = {}
+
+    if request.POST:
+
+        # DATA PARSING
+        data = request.POST
+        username = data.get('username')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+        password = data.get('password')
+
+        # create a new user object
+        new_user = User.objects.create_user(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password,
+            email=email)
+
+        # change status user to staff
+        new_user.is_staff = True
+
+        # save the user to the database
+        new_user.save()
+
+        add_to_group = Group.objects.get(name='Pengunjung')
+        add_to_group.user_set.add(new_user)
+
+        context['message'] = f'Selamat, {username} berhasil didaftar'
+
+    return render(request, 'register.html', context)

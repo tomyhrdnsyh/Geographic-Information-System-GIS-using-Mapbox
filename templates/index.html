@@ -44,7 +44,7 @@
             <ul class="dropdown-menu p-0 top-50" aria-labelledby="dropdownMenuButton1">
                 <span class="dropdown-header text-center">Administrator</span>
                 <div class="dropdown-divider m-0"></div>
-                <li><a class="dropdown-item p-2" href="/admin/"><i class="fa fa-user-circle pe-2 ps-1"></i> Admin Page</a></li>
+                <li><a class="dropdown-item p-2" href="/settings/"><i class="fa fa-cogs pe-2 ps-1"></i> Settings</a></li>
 
             </ul>
         </li>
@@ -67,9 +67,271 @@
         center: {{ center }}, // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
         zoom: {{ zoom }} // starting zoom default 10
     });
+    const polygon_coordinate = [
+                        [
+                            [
+                                110.44610596,
+                                -7.54184151
+                            ],
+                            [
+                                110.45708466,
+                                -7.54095936
+                            ],
+                            [
+                                110.47686768,
+                                -7.55705166
+                            ],
+                            [
+                                110.49542236,
+                                -7.58487844
+                            ],
+                            [
+                                110.50421906,
+                                -7.58896542
+                            ],
+                            [
+                                110.51468658,
+                                -7.60217953
+                            ],
+                            [
+                                110.51298523,
+                                -7.61076212
+                            ],
+                            [
+                                110.52248383,
+                                -7.62148905
+                            ],
+                            [
+                                110.54076385,
+                                -7.62839508
+                            ],
+                            [
+                                110.54586792,
+                                -7.6063509
+                            ],
+                            [
+                                110.57347107,
+                                -7.58412552
+                            ],
+                            [
+                                110.58952332,
+                                -7.58432007
+                            ],
+                            [
+                                110.59710693,
+                                -7.58839417
+                            ],
+                            [
+                                110.60066986,
+                                -7.56944323
+                            ],
+                            [
+                                110.6108551,
+                                -7.57578087
+                            ],
+                            [
+                                110.64681244,
+                                -7.58694744
+                            ],
+                            [
+                                110.66595459,
+                                -7.58498764
+                            ],
+                            [
+                                110.67837524,
+                                -7.58843184
+                            ],
+                            [
+                                110.68904114,
+                                -7.58552027
+                            ],
+                            [
+                                110.70272827,
+                                -7.59354687
+                            ],
+                            [
+                                110.74391174,
+                                -7.5993166
+                            ],
+                            [
+                                110.74488068,
+                                -7.61615372
+                            ],
+                            [
+                                110.76459503,
+                                -7.61981106
+                            ],
+                            [
+                                110.76836395,
+                                -7.62668896
+                            ],
+                            [
+                                110.79203033,
+                                -7.64702988
+                            ],
+                            [
+                                110.79429626,
+                                -7.65655422
+                            ],
+                            [
+                                110.78107452,
+                                -7.66206694
+                            ],
+                            [
+                                110.77612305,
+                                -7.68238163
+                            ],
+                            [
+                                110.76994324,
+                                -7.68469286
+                            ],
+                            [
+                                110.76810455,
+                                -7.70528173
+                            ],
+                            [
+                                110.77223206,
+                                -7.71241999
+                            ],
+                            [
+                                110.75095367,
+                                -7.74124527
+                            ],
+                            [
+                                110.74040222,
+                                -7.76045799
+                            ],
+                            [
+                                110.7300415,
+                                -7.76417398
+                            ],
+                            [
+                                110.72498322,
+                                -7.7772212
+                            ],
+                            [
+                                110.71260071,
+                                -7.79273224
+                            ],
+                            [
+                                110.70870209,
+                                -7.80529261
+                            ],
+                            [
+                                110.67987823,
+                                -7.80653286
+                            ],
+                            [
+                                110.66355896,
+                                -7.79383278
+                            ],
+                            [
+                                110.65800476,
+                                -7.80477476
+                            ],
+                            [
+                                110.64700317,
+                                -7.79524469
+                            ],
+                            [
+                                110.62667847,
+                                -7.80285263
+                            ],
+                            [
+                                110.60390472,
+                                -7.79835033
+                            ],
+                            [
+                                110.60010529,
+                                -7.80669403
+                            ],
+                            [
+                                110.58877563,
+                                -7.80733633
+                            ],
+                            [
+                                110.58482361,
+                                -7.79090738
+                            ],
+                            [
+                                110.56361389,
+                                -7.78244877
+                            ],
+                            [
+                                110.54395294,
+                                -7.79377174
+                            ],
+                            [
+                                110.52948761,
+                                -7.79083252
+                            ],
+                            [
+                                110.51119995,
+                                -7.77742672
+                            ],
+                            [
+                                110.50708771,
+                                -7.76897192
+                            ],
+                            [
+                                110.49176788,
+                                -7.76680517
+                            ],
+                            [
+                                110.49180603,
+                                -7.7421093
+                            ],
+                            [
+                                110.46849823,
+                                -7.63720655
+                            ],
+                            [
+                                110.46851349,
+                                -7.61778212
+                            ],
+                            [
+                                110.46325684,
+                                -7.60474825
+                            ],
+                            [
+                                110.45722198,
+                                -7.56011295
+                            ],
+                            [
+                                110.44610596,
+                                -7.54184151
+                            ]
+                        ]
+                    ]
+
+    map.on('load', function() {
+        map.addSource('polygon', {
+            'type': 'geojson',
+            'data': {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'Polygon',
+                    'coordinates': polygon_coordinate
+                }
+            }
+        });
+
+        map.addLayer({
+            'id': 'polygon-layer',
+            'type': 'fill',
+            'source': 'polygon',
+            'layout': {},
+            'paint': {
+                'fill-color': '#3fb0cd',
+                'fill-opacity': 0.2
+            }
+        });
+    });
+
 
     {% for item in wisata %}
 
+        var markerCoordinates = [{{ item.longitude }}, {{ item.latitude }}];
         var slider_image = `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                               <div class="carousel-inner">
                                 {% for image in item.galeri__gambar %}
@@ -86,18 +348,27 @@
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                               </a>
-                            </div>`
+                            </div>`;
 
-        var marker = new mapboxgl.Marker()
-            .setLngLat([{{ item.longitude }}, {{ item.latitude }}])
-            .setPopup(new mapboxgl.Popup().setHTML(
-                "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>"+
-                "<p>{{ item.lokasi }}</p>"+
-                `${slider_image}`+
-                '<button class="btn btn-info btn-sm mt-2" onclick="get_location_user({{ item.latitude }}, {{ item.longitude }})">Jarak</button>'
-            ))
-            .addTo(map);
+        // Buat objek feature dari marker dan polygon menggunakan Turf.js
+        var markerFeature = turf.point(markerCoordinates);
+        var polygonFeature = turf.polygon(polygon_coordinate);
 
+        // Periksa apakah marker berada di dalam polygon
+        var isMarkerInsidePolygon = turf.booleanPointInPolygon(markerFeature, polygonFeature);
+
+
+        if (isMarkerInsidePolygon) {
+            var marker = new mapboxgl.Marker()
+                .setLngLat(markerCoordinates)
+                .setPopup(new mapboxgl.Popup().setHTML(
+                    "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>" +
+                    "<p>{{ item.lokasi }}</p>" +
+                    `${slider_image}` +
+                    '<button class="btn btn-info btn-sm mt-2" onclick="get_location_user({{ item.latitude }}, {{ item.longitude }})">Jarak</button>'
+                ))
+                .addTo(map);
+        }
     {% endfor %}
 
 

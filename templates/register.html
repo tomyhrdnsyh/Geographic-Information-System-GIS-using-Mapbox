@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GIS Klaten | Register</title>
+
+    <link rel="apple-touch-icon" href="{% static 'img/app-icon.jpg' %}">
+    <link rel="shortcut icon" type="image/x-icon" href=" {% static 'img/app-icon.jpg' %}">
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{% static 'icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+    <div class="register-logo">
+        <a href="{% url 'home' %}"><img src="{% static 'img/logo 2.png' %}" alt="" style="height: 10rem;"></a>
+    </div>
+
+    <div class="card">
+        <div class="card-body register-card-body">
+            {% if message %}
+                <p class="login-box-msg text-success">{{ message }}</p>
+            {% else %}
+                <p class="login-box-msg">Daftar anggota baru</p>
+            {% endif %}
+
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input name="username" type="text" class="form-control" placeholder="Username" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-person-booth"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input name="first_name" type="text" class="form-control" placeholder="First name" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user-astronaut"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input name="last_name" type="text" class="form-control" placeholder="Last name" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user-astronaut"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input name="email" type="email" class="form-control" placeholder="Email" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input name="password" type="password" class="form-control" placeholder="Password" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                {#                <div class="input-group mb-3">#}
+                {#                    <input type="password" class="form-control" placeholder="Retype password">#}
+                {#                    <div class="input-group-append">#}
+                {#                        <div class="input-group-text">#}
+                {#                            <span class="fas fa-lock"></span>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </div>#}
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            <p class="mt-3">Sudah punya akun? <a href="{% url 'login' %}" class="text-center">Login</a></p>
+        </div>
+        <!-- /.form-box -->
+    </div><!-- /.card -->
+</div>
+<!-- /.register-box -->
+
+</body>
+</html>

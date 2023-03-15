@@ -73,6 +73,8 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = '/settings/'
+
 WSGI_APPLICATION = 'GIS.wsgi.application'
 
 # Jazzmin Settings
