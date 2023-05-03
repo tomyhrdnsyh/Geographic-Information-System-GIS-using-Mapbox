@@ -28,7 +28,7 @@ def preprocess_output(wisata, request):
 class WisataView(CreateView):
     model = Wisata
     fields = ['nama_tempat']
-    template_name = 'index.html'
+    template_name = 'maps.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
@@ -38,14 +38,23 @@ class WisataView(CreateView):
 
         if self.request.GET:
             search = self.request.GET.get('search_address')
+            filter_category = self.request.GET.get('category')
 
-            wisata = Wisata.objects.filter(Q(nama_tempat__icontains=search) |
-                                           Q(lokasi__icontains=search)).values('nama_tempat', 'latitude',
-                                                                               'longitude', 'lokasi', 'galeri__gambar')
+            if filter_category:
+                if filter_category == 'all':
+                    wisata = Wisata.objects.values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
 
-            if wisata:
-                center = [wisata[0]['longitude'], wisata[0]['latitude']]
-                zoom = 9
+                else:
+                    wisata = Wisata.objects.filter(jenis=filter_category).values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
+
+            if search:
+                wisata = Wisata.objects.filter(Q(nama_tempat__icontains=search) |
+                                               Q(lokasi__icontains=search)).values('nama_tempat', 'latitude',
+                                                                                   'longitude', 'lokasi', 'galeri__gambar')
+
+                if wisata:
+                    center = [wisata[0]['longitude'], wisata[0]['latitude']]
+                    zoom = 9
 
         else:
             wisata = Wisata.objects.values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
@@ -55,11 +64,15 @@ class WisataView(CreateView):
 
         # send to view
         context['wisata'] = output
-        context[
-            'mapbox_access_token'] = 'pk.eyJ1Ijoicm9uaWFydGFzaXRpbmphayIsImEiOiJja2pzZGdkZTkxNnpjMnRwNXY4MmJwdTJuIn0.yy8btAs8q76jGtbiZY628w '
+        context['mapbox_access_token'] = 'pk.eyJ1Ijoicm9uaWFydGFzaXRpbmphayIsImEiOiJja2pzZGdkZTkxNnpjMnRwNXY4MmJwdTJuIn0.yy8btAs8q76jGtbiZY628w '
         context['center'] = center
         context['zoom'] = zoom
         return context
+
+
+def home(request):
+    context = {}
+    return render(request, 'index.html', context)
 
 
 def about(request):

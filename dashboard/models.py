@@ -10,6 +10,9 @@ class Wisata(models.Model):
     lokasi = models.CharField(max_length=200)
     keterangan = models.TextField(null=True, blank=True)
 
+    CHOOSES = [('Wisata', 'Wisata'), ('Kuliner', 'Kuliner')]
+    jenis = models.CharField(max_length=256, choices=CHOOSES, null=True, blank=True)
+
     def __str__(self):
         return self.nama_tempat
 

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="apple-touch-icon" href="{% static 'img/app-icon.jpg' %}">
-    <link rel="shortcut icon" type="image/x-icon" href=" {% static 'img/app-icon.jpg' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/app-icon.jpg' %}">
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/templatemo.css' %}">
@@ -24,7 +24,7 @@
     <nav class="navbar navbar-expand-lg navbar-light shadow">
         <div class="container d-flex justify-content-between align-items-center">
 
-            <a class="navbar-brand text-success logo h1 align-self-center" href="{% url 'home' %}">
+            <a class="navbar-brand text-success logo h1 align-self-center" href="{% url 'maps' %}">
                 GISKlaten
             </a>
 
@@ -39,7 +39,10 @@
                             <a class="nav-link" href="{% url 'home' %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'about' %}">About & Contact</a>
+                            <a class="nav-link" href="{% url 'maps' %}">Maps</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}">About Us</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/settings/">Administrator</a>

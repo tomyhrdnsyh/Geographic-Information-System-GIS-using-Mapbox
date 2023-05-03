@@ -15,4 +15,4 @@ class GaleriWisataInline(admin.TabularInline):
 class WisataAdmin(admin.ModelAdmin):
     inlines = [GaleriWisataInline]
     list_display = ("id_tempat", "nama_tempat", "latitude", "longitude", "lokasi",
-                    "keterangan")
+                    "jenis")

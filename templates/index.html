@@ -2,499 +2,266 @@
 {% load static %}
 <html>
 <head>
+    <!-- basic -->
     <meta charset="utf-8">
-    <title>GIS Klaten - Home</title>
-
-    <link rel="apple-touch-icon" href="{% static 'img/app-icon.jpg' %}">
-    <link rel="shortcut icon" type="image/x-icon" href=" {% static 'img/app-icon.jpg' %}">
-
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
-    <link href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.6.0/mapbox-gl-geocoder.css' rel='stylesheet' />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
-    <script src="https://unpkg.com/@turf/turf"></script>
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Doze Cafe</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css-home/bootstrap.min.css' %}">
+    <!-- style css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css-home/style.css' %}">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="{% static 'css-home/responsive.css' %}">
+    <!-- fevicon -->
+    <link rel="icon" href="{% static 'img/app-icon.jpg' %}" type="image/gif" />
+    <!-- font css -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css-home/jquery.mCustomScrollbar.min.css' %}">
+    <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 </head>
 <body>
-<!-- Menu Bar -->
-<div class="menu-bar">
-    <a href="/"><img src="{% static 'img/logo 5.png' %}" alt="" style="height: 3rem;"></a>
-    <ul class="menu-bar-ul">
-
-        <form method="get" action="/" class="input-group me-lg-5">
-            <input placeholder="Search Location" name="search_address" aria-label="Search Location" class="form-control" value="" style="padding: 0.5em 0.5em 0.5em 1.5em; width: 245px; font-size: 12px;">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
-            </div>
-        </form>
-
-        <li class="menu-bar-ul-li"><a href="/">Home</a></li>
-        <li class="menu-bar-ul-li text-center"><a href="{% url 'about' %}" style="width: 180px;">About & Contact</a></li>
-
-        <li class="dropdown ms-lg-4">
-            <button class="btn btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-cogs" style="font-size:25px; color:#65737e;"></i>
+<div class="header_section">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand"href="index.html"><img style="height: 80px;" src="{% static 'img/logo 2.png' %}"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <ul class="dropdown-menu p-0 top-50" aria-labelledby="dropdownMenuButton1">
-                <span class="dropdown-header text-center">Administrator</span>
-                <div class="dropdown-divider m-0"></div>
-                <li><a class="dropdown-item p-2" href="/settings/"><i class="fa fa-cogs pe-2 ps-1"></i> Settings</a></li>
-
-            </ul>
-        </li>
-    </ul>
-</div>
-<!-- End Menu Bar -->
-
-
-<div id='map'></div>
-
-<script>
-    // TO MAKE THE MAP APPEAR YOU MUST
-    // ADD YOUR ACCESS TOKEN FROM
-    // https://account.mapbox.com
-    mapboxgl.accessToken = '{{ mapbox_access_token }}';
-    const map = new mapboxgl.Map({
-        container: 'map', // container ID
-        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-        style: 'mapbox://styles/mapbox/light-v11', // style URL
-        center: {{ center }}, // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
-        zoom: {{ zoom }} // starting zoom default 10
-    });
-    const polygon_coordinate = [
-                        [
-                            [
-                                110.44610596,
-                                -7.54184151
-                            ],
-                            [
-                                110.45708466,
-                                -7.54095936
-                            ],
-                            [
-                                110.47686768,
-                                -7.55705166
-                            ],
-                            [
-                                110.49542236,
-                                -7.58487844
-                            ],
-                            [
-                                110.50421906,
-                                -7.58896542
-                            ],
-                            [
-                                110.51468658,
-                                -7.60217953
-                            ],
-                            [
-                                110.51298523,
-                                -7.61076212
-                            ],
-                            [
-                                110.52248383,
-                                -7.62148905
-                            ],
-                            [
-                                110.54076385,
-                                -7.62839508
-                            ],
-                            [
-                                110.54586792,
-                                -7.6063509
-                            ],
-                            [
-                                110.57347107,
-                                -7.58412552
-                            ],
-                            [
-                                110.58952332,
-                                -7.58432007
-                            ],
-                            [
-                                110.59710693,
-                                -7.58839417
-                            ],
-                            [
-                                110.60066986,
-                                -7.56944323
-                            ],
-                            [
-                                110.6108551,
-                                -7.57578087
-                            ],
-                            [
-                                110.64681244,
-                                -7.58694744
-                            ],
-                            [
-                                110.66595459,
-                                -7.58498764
-                            ],
-                            [
-                                110.67837524,
-                                -7.58843184
-                            ],
-                            [
-                                110.68904114,
-                                -7.58552027
-                            ],
-                            [
-                                110.70272827,
-                                -7.59354687
-                            ],
-                            [
-                                110.74391174,
-                                -7.5993166
-                            ],
-                            [
-                                110.74488068,
-                                -7.61615372
-                            ],
-                            [
-                                110.76459503,
-                                -7.61981106
-                            ],
-                            [
-                                110.76836395,
-                                -7.62668896
-                            ],
-                            [
-                                110.79203033,
-                                -7.64702988
-                            ],
-                            [
-                                110.79429626,
-                                -7.65655422
-                            ],
-                            [
-                                110.78107452,
-                                -7.66206694
-                            ],
-                            [
-                                110.77612305,
-                                -7.68238163
-                            ],
-                            [
-                                110.76994324,
-                                -7.68469286
-                            ],
-                            [
-                                110.76810455,
-                                -7.70528173
-                            ],
-                            [
-                                110.77223206,
-                                -7.71241999
-                            ],
-                            [
-                                110.75095367,
-                                -7.74124527
-                            ],
-                            [
-                                110.74040222,
-                                -7.76045799
-                            ],
-                            [
-                                110.7300415,
-                                -7.76417398
-                            ],
-                            [
-                                110.72498322,
-                                -7.7772212
-                            ],
-                            [
-                                110.71260071,
-                                -7.79273224
-                            ],
-                            [
-                                110.70870209,
-                                -7.80529261
-                            ],
-                            [
-                                110.67987823,
-                                -7.80653286
-                            ],
-                            [
-                                110.66355896,
-                                -7.79383278
-                            ],
-                            [
-                                110.65800476,
-                                -7.80477476
-                            ],
-                            [
-                                110.64700317,
-                                -7.79524469
-                            ],
-                            [
-                                110.62667847,
-                                -7.80285263
-                            ],
-                            [
-                                110.60390472,
-                                -7.79835033
-                            ],
-                            [
-                                110.60010529,
-                                -7.80669403
-                            ],
-                            [
-                                110.58877563,
-                                -7.80733633
-                            ],
-                            [
-                                110.58482361,
-                                -7.79090738
-                            ],
-                            [
-                                110.56361389,
-                                -7.78244877
-                            ],
-                            [
-                                110.54395294,
-                                -7.79377174
-                            ],
-                            [
-                                110.52948761,
-                                -7.79083252
-                            ],
-                            [
-                                110.51119995,
-                                -7.77742672
-                            ],
-                            [
-                                110.50708771,
-                                -7.76897192
-                            ],
-                            [
-                                110.49176788,
-                                -7.76680517
-                            ],
-                            [
-                                110.49180603,
-                                -7.7421093
-                            ],
-                            [
-                                110.46849823,
-                                -7.63720655
-                            ],
-                            [
-                                110.46851349,
-                                -7.61778212
-                            ],
-                            [
-                                110.46325684,
-                                -7.60474825
-                            ],
-                            [
-                                110.45722198,
-                                -7.56011295
-                            ],
-                            [
-                                110.44610596,
-                                -7.54184151
-                            ]
-                        ]
-                    ]
-
-    map.on('load', function() {
-        map.addSource('polygon', {
-            'type': 'geojson',
-            'data': {
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'Polygon',
-                    'coordinates': polygon_coordinate
-                }
-            }
-        });
-
-        map.addLayer({
-            'id': 'polygon-layer',
-            'type': 'fill',
-            'source': 'polygon',
-            'layout': {},
-            'paint': {
-                'fill-color': '#3fb0cd',
-                'fill-opacity': 0.2
-            }
-        });
-    });
-
-
-    {% for item in wisata %}
-
-        var markerCoordinates = [{{ item.longitude }}, {{ item.latitude }}];
-        var slider_image = `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                              <div class="carousel-inner">
-                                {% for image in item.galeri__gambar %}
-                                <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 150px;">
-                                  <img class="d-block w-100" src="{{ image }}" alt="First slide">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'maps' %}">Maps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings/">Administrator</a>
+                    </li>
+                </ul>
+                {#                  <form class="form-inline my-2 my-lg-0">#}
+                {#                     <div class="login_bt">#}
+                {#                        <ul>#}
+                {#                           <li><a href="#"><span class="user_icon"><i class="fa fa-user" aria-hidden="true"></i></span>Login</a></li>#}
+                {#                           <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>#}
+                {#                        </ul>#}
+                {#                     </div>#}
+                {#                  </form>#}
+            </div>
+        </nav>
+    </div>
+    <!-- banner section start -->
+    <div class="banner_section layout_padding">
+        <div class="container">
+            <div id="banner_slider" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="banner_img"><img style="height: 410px;" src="{% static 'img/Klaten-Maps.png' %}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="banner_taital_main">
+                                    <h1 class="banner_taital">Klaten</h1>
+                                    <h5 class="tasty_text">Lorem Ipsum</h5>
+                                    <p class="banner_text">Klaten merupakan tempat paling tepat bagi anda yang membutuhkan tempat healing ala ala Gen-Z </p>
+                                    {% comment %}<div class="btn_main">
+                                        <div class="about_bt"><a href="{% url 'about' %}">About Us</a></div>
+                                    </div>{% endcomment %}
                                 </div>
-                                {% endfor %}
-                              </div>
-                              <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                              <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </div>`;
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="banner_img"><img style="height: 410px;" src="{% static 'img/candi.png' %}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="banner_taital_main">
+                                    <h1 class="banner_taital">Wisata</h1>
+                                    <h5 class="tasty_text">Lorem Ipsum</h5>
+                                    <p class="banner_text">Kami memberikan sejumlah informasi wisata menarik di Klaten
+                                        yang membuat anda lebih leluasa memilih kunjungan wisata </p>
+                                    {% comment %}<div class="btn_main">
+                                        <div class="about_bt"><a href="{% url 'about' %}">About Us</a></div>
+                                    </div>{% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="banner_img"><img style="height: 410px;" src="{% static 'img/bubur.png' %}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="banner_taital_main">
+                                    <h1 class="banner_taital">Kuliner</h1>
+                                    <h5 class="tasty_text">Lorem Ipsum</h5>
+                                    <p class="banner_text">Varian kuliner yang beraneka ragam membuat perjalanan anda semakin seru </p>
+                                    {% comment %}<div class="btn_main">
+                                        <div class="about_bt"><a href="{% url 'about' %}">About Us</a></div>
+                                    </div>{% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#banner_slider" role="button" data-slide="prev">
+                    <i class="fa fa-arrow-left"></i>
+                </a>
+                <a class="carousel-control-next" href="#banner_slider" role="button" data-slide="next">
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- banner section end -->
+</div>
+<!-- header section end -->
+<!-- coffee section start -->
+<div class="coffee_section layout_padding">
+    <div class="container">
+        <div class="row">
+            <h1 class="coffee_taital">Destinasi Wisata dan Kuliner</h1>
+            <div class="bulit_icon"><img src="{% static 'images/bulit-icon.png' %}"></div>
+        </div>
+    </div>
+    <div class="coffee_section_2">
+        <div id="main_slider" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img style="height: 290px;" src="{% static 'images/River Tubing Pusir Adventure.jpg' %}"></div>
+                                <h3 class="types_text text-uppercase">River Tubing Pusir Adventure</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img style="height: 290px;" src="https://1.bp.blogspot.com/-xsdcKsm4lJA/YKHjB26uAGI/AAAAAAAAD10/SQetQIAjrnI2T4I672DY4WCMy0ft3Ha9QCLcBGAsYHQ/s2048/Galuh-Tirtonirmolo-Waterpark.jpg"></div>
+                                <h3 class="types_text text-uppercase">Waterpark Galuh Tirtonirmolo Prambanan</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img style="height: 290px;" src="https://t-2.tstatic.net/tribunpontianaktravel/foto/bank/images/wisata-deles-indah2.jpg"></div>
+                                <h3 class="types_text text-uppercase">Deles Indah</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img style="height: 290px;" src="https://mytrip123.com/wp-content/uploads/2022/02/fasilitas-gondang-winangoen.jpg"></div>
+                                <h3 class="types_text text-uppercase">Agrowisata Gondang Winangoen</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-1.png' %}"></div>
+                                <h3 class="types_text">TYPES OF COFFEE</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-2.png' %}"></div>
+                                <h3 class="types_text">BEAN VARIETIES</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-3.png' %}"></div>
+                                <h3 class="types_text">COFFEE & PASTRY</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-4.png' %}"></div>
+                                <h3 class="types_text">COFFEE TO GO</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-1.png' %}"></div>
+                                <h3 class="types_text">TYPES OF COFFEE</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-2.png' %}"></div>
+                                <h3 class="types_text">BEAN VARIETIES</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-3.png' %}"></div>
+                                <h3 class="types_text">COFFEE & PASTRY</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="coffee_img"><img src="{% static 'images/img-4.png' %}"></div>
+                                <h3 class="types_text">COFFEE TO GO</h3>
+                                <p class="looking_text">looking at its layout. The point of</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- coffee section end -->
+<!-- about section start -->
+<div class="about_section layout_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="about_taital">Tentang Website Kami</h1>
+                <div class="bulit_icon"><img src="{% static 'images/bulit-icon.png' %}"></div>
+            </div>
+        </div>
+        <div class="about_section_2 layout_padding">
+            <div class="image_iman"><img src="{% static 'img/logo 2.png' %}" class="about_img"></div>
+            <div class="about_taital_box mt-4">
+                <h1 class="about_taital_1">Sistem Informasi Geografis Klaten</h1>
+                <p class=" about_text">has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editorhas a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editor</p>
+                <div class="readmore_btn"><a href="{% url 'about' %}">Selengkapnya</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- about section end -->
 
-        // Buat objek feature dari marker dan polygon menggunakan Turf.js
-        var markerFeature = turf.point(markerCoordinates);
-        var polygonFeature = turf.polygon(polygon_coordinate);
-
-        // Periksa apakah marker berada di dalam polygon
-        var isMarkerInsidePolygon = turf.booleanPointInPolygon(markerFeature, polygonFeature);
-
-
-        if (isMarkerInsidePolygon) {
-            var marker = new mapboxgl.Marker()
-                .setLngLat(markerCoordinates)
-                .setPopup(new mapboxgl.Popup().setHTML(
-                    "<p class='h7 fw-bolder'>{{ item.nama_tempat }}</p>" +
-                    "<p>{{ item.lokasi }}</p>" +
-                    `${slider_image}` +
-                    '<button class="btn btn-info btn-sm mt-2" onclick="get_location_user({{ item.latitude }}, {{ item.longitude }})">Jarak</button>'
-                ))
-                .addTo(map);
-        }
-    {% endfor %}
-
-
-
-    // GET LOCATION USER
-    function get_location_user(lat_target, long_target) {
-        // when get location user is success
-
-        const successCallback = (position) => {
-
-            user_latitude = position.coords.latitude;
-            user_longitude = position.coords.longitude;
-
-            var from = [user_latitude, user_longitude]
-            var to = [lat_target, long_target]
-
-            // Calculate the distance between the two coordinates using the turf.js library:
-            var distance = turf.distance(turf.point(from), turf.point(to));
-
-            // get address user
-            let url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${user_latitude}&lon=${user_longitude}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.address) {
-                        formatted_address = `${data.address.city}, ${data.address.country} <p> Jarak : <strong> ${distance.toFixed(2)} KM</strong></p> `;
-                        geojson = {
-                            'type': 'Feature',
-                            'properties': {
-                                'message': formatted_address,
-                                'iconSize': [60, 60]
-                            },
-                            'geometry': {
-                                'type': 'Point',
-                                'coordinates': [user_longitude, user_latitude]
-                            }
-                        };
-
-                        // Create a DOM element for each marker.
-                        const el = document.createElement('div');
-                        const width = geojson.properties.iconSize[0];
-                        const height = geojson.properties.iconSize[1];
-                        el.className = 'marker';
-                        el.style.backgroundImage = `url({% static "img/user.png" %})`;
-                        el.style.width = `${width}px`;
-                        el.style.height = `${height}px`;
-                        el.style.backgroundSize = '100%';
-
-                        // Add markers to the map.
-                        new mapboxgl.Marker(el)
-                            .setLngLat(geojson.geometry.coordinates)
-                            .setPopup(new mapboxgl.Popup().setHTML("<p class='h7 fw-bolder'>Your Location</p>"+geojson.properties.message))
-                            .addTo(map)
-                            .togglePopup();
-
-                        lineFeature = {
-                            "type": "Feature",
-                            "geometry": {
-                                "type": "LineString",
-                                "coordinates": [
-                                    [user_longitude, user_latitude],
-                                    [long_target, lat_target],
-                                ]
-                            }
-                        };
-
-                        // Remove the existing source
-                        if (map.getSource('user-ID')) {
-                            // Remove the line layer
-                            map.removeLayer('route');
-                            // Remove the source marker
-                            map.removeSource('user-ID');
-                        }
-
-                        map.addSource('user-ID', {
-                            type: 'geojson',
-                            data: {
-                                type: 'FeatureCollection',
-                                features: [lineFeature]
-                            }
-                        });
-                        map.addLayer({
-                            id: 'route',
-                            type: 'line',
-                            source: 'user-ID',
-                            layout: {
-                                'line-cap': 'round',
-                                'line-join': 'round',
-                            },
-                            paint: {
-                                'line-color': '#888',
-                                'line-width': 2,
-                                'line-dasharray': [0, 3],
-                            }
-                        });
-                        // Add a symbol layer to display text on the line
-                        {% comment %}map.addLayer({
-                            'id': 'my-text-layer',
-                            'type': 'symbol',
-                            'source': 'user-ID',
-                            'layout': {
-                                'symbol-placement': 'line',
-                                'text-field': 'Text', // Replace with the name of your text field attribute
-                                'text-size': 16,
-                                {#'text-color': '#000000',#}
-                                'text-offset': [0, -2]
-                            }
-                        });{% endcomment %}
-
-                    }
-                })
-                .catch(error => alert(`Error: ${error}`));
-        };
-
-        const errorCallback = (error) => {
-            alert(error);
-        };
-
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-
-
-    }
-
-</script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<!-- Javascript files-->
+<script src="{% static 'js-home/jquery.min.js' %}"></script>
+<script src="{% static 'js-home/popper.min.js' %}"></script>
+<script src="{% static 'js-home/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js-home/jquery-3.0.0.min.js' %}"></script>
+<script src="{% static 'js-home/plugin.js' %}"></script>
+<!-- sidebar -->
+<script src="{% static 'js-home/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'js-home/custom.js' %}"></script>
 </body>
 </html>
