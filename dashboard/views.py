@@ -20,6 +20,8 @@ def preprocess_output(wisata, request):
     for place in places.values():
         if place["galeri__gambar"][0] is None and len(place["galeri__gambar"]) == 1:
             place["galeri__gambar"] = [request.build_absolute_uri('/static/img/logo 2.png')]
+        else:
+            place["galeri__gambar"] = list(map(lambda x: '/' + x, place["galeri__gambar"]))
         output.append(place)
 
     return output
