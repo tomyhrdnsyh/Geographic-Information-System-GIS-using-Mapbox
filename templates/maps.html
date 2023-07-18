@@ -72,6 +72,18 @@
 
 <div id='map'></div>
 
+{% if messages %}
+  <div class="container mt-5">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // TO MAKE THE MAP APPEAR YOU MUST
     // ADD YOUR ACCESS TOKEN FROM
@@ -80,7 +92,7 @@
     const map = new mapboxgl.Map({
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-        style: 'mapbox://styles/mapbox/light-v11', // style URL
+        style: 'mapbox://styles/mapbox/streets-v12', // style URL
         center: {{ center }}, // starting position [lng, lat] default [110.57870550900672, -7.624203272227861]
         zoom: {{ zoom }} // starting zoom default 10
     });
@@ -462,40 +474,42 @@
                         }
 
                         map.addSource('user-ID', {
-                            type: 'geojson',
-                            data: {
-                                type: 'FeatureCollection',
-                                features: [lineFeature]
+                            'type': 'geojson',
+                            'data': {
+                                'type': 'Feature',
+                                'properties': {},
+                                'geometry': {
+                                    'type': 'LineString',
+                                    'coordinates': []
+                                }
                             }
                         });
+
                         map.addLayer({
-                            id: 'route',
-                            type: 'line',
-                            source: 'user-ID',
-                            layout: {
-                                'line-cap': 'round',
-                                'line-join': 'round',
-                            },
-                            paint: {
-                                'line-color': '#888',
-                                'line-width': 2,
-                                'line-dasharray': [0, 3],
-                            }
-                        });
-                        // Add a symbol layer to display text on the line
-                        {% comment %}map.addLayer({
-                            'id': 'my-text-layer',
-                            'type': 'symbol',
+                            'id': 'route',
+                            'type': 'line',
                             'source': 'user-ID',
                             'layout': {
-                                'symbol-placement': 'line',
-                                'text-field': 'Text', // Replace with the name of your text field attribute
-                                'text-size': 16,
-                                {#'text-color': '#000000',#}
-                                'text-offset': [0, -2]
+                                'line-join': 'round',
+                                'line-cap': 'round'
+                            },
+                            'paint': {
+                                'line-color': '#ffa500',
+                                'line-width': 4,
                             }
-                        });{% endcomment %}
+                        });
 
+                        // call api directions
+                        $.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${user_longitude},${user_latitude};${long_target},${lat_target}?access_token={{ mapbox_access_token }}&geometries=geojson&overview=full`, function (data) {
+                            var route = data.routes[0].geometry;
+
+                            // Update the route source with the retrieved geometry
+                            map.getSource('user-ID').setData({
+                                'type': 'Feature',
+                                'properties': {},
+                                'geometry': route
+                            });
+                        });
                     }
                 })
                 .catch(error => alert(`Error: ${error}`));

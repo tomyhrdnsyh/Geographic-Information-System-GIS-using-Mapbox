@@ -3,6 +3,7 @@ from django.views.generic.edit import CreateView
 from .models import *
 from django.db.models import Q
 from django.contrib.auth.models import User, Group
+from django.contrib import messages
 
 
 # Create your views here.
@@ -35,7 +36,7 @@ class WisataView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        center = [110.96072044262617, -7.342371509127405]
+        center = [110.56119746362944, -7.721894421266018]
         zoom = 7
 
         if self.request.GET:
@@ -50,14 +51,18 @@ class WisataView(CreateView):
                     wisata = Wisata.objects.filter(jenis=filter_category).values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
 
             if search:
-                wisata = Wisata.objects.filter(Q(nama_tempat__icontains=search) |
+                search_found = Wisata.objects.filter(Q(nama_tempat__icontains=search) |
                                                Q(lokasi__icontains=search)).values('nama_tempat', 'latitude',
                                                                                    'longitude', 'lokasi', 'galeri__gambar')
-
-                if wisata:
+                if search_found:
+                    wisata = search_found
                     center = [wisata[0]['longitude'], wisata[0]['latitude']]
-                    zoom = 9
+                    zoom = 7
 
+                else:
+                    # Some logic
+                    messages.info(self.request, f'{search} tidak ditemukan!')
+                    wisata = Wisata.objects.values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
         else:
             wisata = Wisata.objects.values('nama_tempat', 'latitude', 'longitude', 'lokasi', 'galeri__gambar')
 
@@ -66,7 +71,7 @@ class WisataView(CreateView):
 
         # send to view
         context['wisata'] = output
-        context['mapbox_access_token'] = 'pk.eyJ1Ijoicm9uaWFydGFzaXRpbmphayIsImEiOiJja2pzZGdkZTkxNnpjMnRwNXY4MmJwdTJuIn0.yy8btAs8q76jGtbiZY628w '
+        context['mapbox_access_token'] = 'pk.eyJ1Ijoicm9uaWFydGFzaXRpbmphayIsImEiOiJja2pzZGdkZTkxNnpjMnRwNXY4MmJwdTJuIn0.yy8btAs8q76jGtbiZY628w'
         context['center'] = center
         context['zoom'] = zoom
         return context

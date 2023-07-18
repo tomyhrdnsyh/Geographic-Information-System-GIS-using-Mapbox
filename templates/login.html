@@ -12,31 +12,41 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{% static 'icheck-bootstrap/icheck-bootstrap.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
         <a href="{% url 'home' %}"><img src="{% static 'img/logo 2.png' %}" alt="" style="height: 10rem;"></a>
     </div>
+    {% if form.non_field_errors %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {% for msg in form.non_field_errors %}
+        {{ msg }}
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
 
             <p class="login-box-msg">
                 {% if msg %}
-                    <span class="text-danger"> {{ msg | safe }} </span>
+                    <!-- <span class="text-danger"> {{ msg | safe }} </span> -->
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ msg | safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% else %}
                     Masuk untuk memulai sesi Anda
                 {% endif %}
 
             </p>
             <form method="post" action="">
-                {% csrf_token %}
-                {{form.non_field_errors}}
+                {% csrf_token %}                
                 <div class="input-group mb-3">
                     <input name="username" type="text" class="form-control" placeholder="Username" required id="id_username">
                     <div class="input-group-append">
@@ -69,6 +79,6 @@
     </div>
 </div>
 <!-- /.login-box -->
-
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
